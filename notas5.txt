@@ -1,0 +1,367 @@
+setInterval(()=>{
+md('ab')
+cd('ab')
+},1000)
+
+
+
+
+
+
+
+
+
+
+
+
+
+esPrimo=(num1)=>{
+	esPrimoVar=true
+	for(i=2;i<num1;i++){
+		if(num1%i==0){
+			esPrimoVar=false
+		}
+	}
+	return esPrimoVar
+}
+
+numString=""
+for(i=0;i<1000;i++){
+	if(esPrimo(i)==true){
+		numString+=" "+i
+	}
+}
+print(numString)
+
+
+
+
+esPrimo=(num1)=>{
+	esPrimoVar=true
+	for(i=2;i<num1;i++){
+		if(num1%i==0){
+			esPrimoVar=false
+		}
+	}
+	return esPrimoVar
+}
+
+numString=""
+for(i=0;i<1000;i++){
+	if(esPrimo(i)==true){
+		numString+=" "+i
+	}
+}
+print(numString)
+
+
+
+esPrimo=(num1)=>{
+	esPrimoVar=true
+	for(i=2;i<num1;i++){
+		if(num1%i==0){
+			esPrimoVar=false
+		}
+	}
+	return esPrimoVar
+}
+
+size=await read("size?")
+numString=""
+for(i=0;i<size;i++){
+	if(esPrimo(i)==true){
+		numString+=" "+i
+	}
+}
+print(numString)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+aux1=0
+aux2=0
+size=100
+array={}
+for(i=0;i<size;i++){
+	array[i]=Math.floor(Math.random()*100)
+}
+for(i=0;i<size;i++){
+	for(j=0;j<size;j++){
+		if(array[j]<array[j+1]){
+			aux1=array[j]
+			aux2=array[j]
+			array[j]=aux2
+			array[j]=aux1
+		}
+	}
+}
+cadena=""
+for(i=0;i<size;i++){
+	cadena+=" "+array[i]
+}
+print(cadena)
+
+
+aux1=0
+aux2=0
+size=100
+array={}
+for(i=0;i<size;i++){
+	array[i]=Math.floor(Math.random()*100)
+}
+for(i=0;i<size;i++){
+	for(j=0;j<size;j++){
+		if(array[j]<array[j+1]){
+			aux1=array[j]
+			aux2=array[j+1]
+			array[j]=aux2
+			array[j+1]=aux1
+		}
+	}
+}
+cadena=""
+for(i=0;i<size;i++){
+	cadena+=" "+array[i]
+}
+print(cadena)
+
+
+
+
+aux1=0
+aux2=0
+size=await read("size?")
+highness=await read("maximum number?")
+array={}
+for(i=0;i<size;i++){
+	array[i]=Math.floor(Math.random()*highness)
+}
+for(i=0;i<size;i++){
+	for(j=0;j<size;j++){
+		if(array[j]<array[j+1]){
+			aux1=array[j]
+			aux2=array[j+1]
+			array[j]=aux2
+			array[j+1]=aux1
+		}
+	}
+}
+cadena=""
+for(i=0;i<size;i++){
+	cadena+=" "+array[i]
+}
+print(cadena)
+
+aux1=0
+aux2=0
+size=await read("size?")
+highness=await read("maximum number?")
+array={}
+for(i=0;i<size;i++){
+	array[i]=Math.floor(Math.random()*highness)
+}
+for(i=0;i<size;i++){
+	for(j=0;j<size;j++){
+		if(array[j]<array[j+1]){
+			aux1=array[j]
+			aux2=array[j+1]
+			array[j]=aux2
+			array[j+1]=aux1
+		}
+	}
+}
+cadena=""
+for(i=0;i<size;i++){
+	cadena+=" "+array[i]
+}
+print(cadena)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Crear
+
+C:\>"C:\Program Files (x86)\SASM\NASM\nasm.exe" -f bin noseque.asm -o sistema.img
+
+C:\>"C:\Program Files (x86)\SASM\NASM\nasm.exe" -f bin noseque.asm -o sistema.img
+
+C:\>"C:\Program Files (x86)\SASM\NASM\nasm.exe" -f bin noseque.asm -o sistema.img
+
+
+
+
+C:\>"C:\Program Files (x86)\SASM\NASM\nasm.exe" -f bin sistema.asm -o sistema.img
+
+C:\>"C:\Program Files (x86)\SASM\NASM\nasm.exe" -f bin sistema.asm -o sistema.img
+
+C:\>"C:\Program Files (x86)\SASM\NASM\nasm.exe" -f bin sistema.asm -o sistema.img
+
+
+
+
+
+El archivo.
+
+E:\qemu\qemu-system-x86_64.exe
+
+C:\Users\usuario\AppData\Local\VirtualStore\Program Files (x86)\SASM\Projects\sistema.img
+
+El qemu:
+
+E:\qemu
+
+
+Comando compilar:
+
+"C:\Program Files (x86)\SASM\NASM\nasm.exe" -f bin "C:\Users\usuario\AppData\Local\VirtualStore\Program Files (x86)\SASM\Projects\8.asm" -o "C:\Users\usuario\Desktop\sistema100.img"
+
+Comando ejecutar:
+
+E:\qemu\qemu-system-x86_64.exe "C:\Users\usuario\Desktop\sistema100.img"
+
+
+sumar(1,1)
+
+
+
+
+
+
+
+Hazme un sistema operativo pero q se muestre el directorio actual de la siguiente manera:
+-subir nivel
+-crear carpeta
+-recuadros de carpetas con una cruz para eliminarlas si no pulsa la cruz o para renombrarlas pulsando un lápiz y pulsa otra parte le transportará a esa carpeta.
+
+Al principio no habrá nada, no habrá directorios, nada. Será el usuario quien tenga q clickear "crear carpeta" para crear los directorios y eso.
+
+
+
+
+
+
+
+
+
+
+
+Comando para limpiar la pantalla:
+
+
+
+; --- Limpiar la pantalla ---
+    mov ah, 0x00      ; Función 0x00 del BIOS: Establecer modo de video / reiniciar pantalla
+    mov al, 0x03      ; Modo de video estándar: Texto 80x25 con 16 colores
+    int 0x10          ; Ejecuta la interrupción de la BIOS (esto borra la pantalla y pone el cursor en 0,0)
+
+
+
+
+
+
+
+
+
+Comando para escribir carácter en la pantalla:
+
+    mov ah, 0x0e      ; Función del BIOS para imprimir un carácter en pantalla de forma sencilla
+    mov al, 'S'       ; Carácter que queremos imprimir
+    int 0x10          ; Llamada a la interrupción de video del BIOS
+
+    mov ah, 0x0e      ; Función del BIOS para imprimir un carácter en pantalla de forma sencilla
+    mov al, 'i'       ; Carácter que queremos imprimir
+    int 0x10          ; Llamada a la interrupción de video del BIOS
+
+
+
+
+
+
+
+
+
+
+
+
+Proponer entrada de texto y checkar tecla:
+
+
+
+mi_bucle:
+
+; 2. Esperar a que el usuario presione una tecla
+    mov ah, 0x00      ; Función 0x00: Esperar y leer pulsación de teclado
+    int 0x16          ; La BIOS se pausa aquí hasta que pulses algo. 
+                      ; Al pulsar, la letra queda guardada automáticamente en el registro 'al'.
+
+    ; 3. Imprimir la tecla que el usuario acaba de presionar
+    mov ah, 0x0e      ; Función de la BIOS para imprimir el carácter que ya está en 'al'
+    int 0x10          ; Imprime en pantalla la letra que presionaste
+
+jnz mi_bucle       ; 3. Saltar de vuelta a "mi_bucle" si el resultado NO es cero (Jump if Not Zero)
