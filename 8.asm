@@ -1,199 +1,57 @@
-; NOTEPAD OS - CORRECTO MANEJO DE CURSOR, VIDEO Y SCROLL (mejorado)
-[org 0x7c00]
+[org 0x7c00]      ; La BIOS carga los sectores de arranque en esta dirección de memoria
 
-start:
-    cli
-    xor ax, ax
-    mov ds, ax
-    mov ss, ax
-    mov sp, 0x7c00
-    sti
+    ; --- Limpiar la pantalla ---
+    mov ah, 0x00      ; Función 0x00 del BIOS: Establecer modo de video / reiniciar pantalla
+    mov al, 0x03      ; Modo de video estándar: Texto 80x25 con 16 colores
+    int 0x10          ; Ejecuta la interrupción de la BIOS (borra pantalla y pone cursor en 0,0)
 
-    ; Modo texto 80x25
-    mov ax, 3
+mi_bucle:
+    mov ah, 0x09        ; Función para escribir carácter y atributo
+    mov al, 'a'         ; El carácter que quieres imprimir
+    mov bh, 0x00        ; Página de video (0)
+    mov bl, 0x02        ; Atributo de color: 0 (fondo negro) | 2 (texto verde)
+    mov cx, 0x01        ; Número de veces que se imprime el carácter
     int 0x10
 
-    mov ax, 0xB800
-    mov es, ax
-    xor di, di          ; DI = offset en bytes (fila * 160 + col * 2)
+    mov ah, 0x00
+    int 0x16            ; Esperar tecla
 
-main_loop:
-    call update_hw_cursor
-    xor ah, ah
-    int 0x16
+    ; Comprobar si es Backspace (borrar)
+    cmp al, 0x08
+    je borrar_tecla
 
-    cmp al, 24          ; Ctrl + X para salir
-    je halt_sys
+    ; --- Bucle para recorrer el array del abecedario y números ---
+    mov cx, 63          ; Contador: 62 elementos (52 letras + 10 números)
+    mov di, abecedario  ; Apuntar DI al inicio del array
 
-    cmp ah, 0x4B        ; Flecha Izquierda
-    je move_left
+buscar_letra:
+    mov bl, [di]        ; Cargar la letra actual del array
+    cmp al, bl          ; ¿Coincide con la tecla presionada?
+    je imprimir         ; Si coincide, salta a imprimir
+    inc di              ; Siguiente elemento del array
+    dec cx              ; Decrementar contador
+    jnz buscar_letra    ; Si no llega a cero, repetir bucle
 
-    cmp ah, 0x4D        ; Flecha Derecha
-    je move_right
+    jmp mi_bucle        ; Si no es una tecla válida, ignorar y volver a esperar
 
-    cmp ah, 0x48        ; Flecha Arriba
-    je move_up
+imprimir:
+    mov ah, 0x0e
+    int 0x10
+    jmp mi_bucle
 
-    cmp ah, 0x50        ; Flecha Abajo
-    je move_down
-
-    cmp al, 8           ; Backspace
-    je do_backspace
-
-    cmp al, 13          ; Enter
-    je do_enter
-
-    cmp al, 32
-    jl main_loop
-    cmp al, 126
-    jg main_loop
-
-    ; Escribir caracter y atributo en la memoria de video (word write)
-    mov ah, 0x07        ; atributo
-    mov [es:di], ax     ; mov word [es:di], ax  (NASM admite esta forma)
-    add di, 2
-    cmp di, 4000
-    jge .need_scroll
-    jmp main_loop
-
-.need_scroll:
-    call scroll_up
-    jmp main_loop
-
-move_left:
-    cmp di, 0
-    jbe main_loop
-    sub di, 2
-    jmp main_loop
-
-move_right:
-    cmp di, 3998
-    jge main_loop
-    add di, 2
-    jmp main_loop
-
-move_up:
-    cmp di, 160
-    jb main_loop
-    sub di, 160
-    jmp main_loop
-
-move_down:
-    cmp di, 3840
-    jae main_loop
-    add di, 160
-    jmp main_loop
-
-do_backspace:
-    cmp di, 0
-    je main_loop
-    ; si estamos al inicio de línea, saltar a la línea anterior (si existe)
-    mov ax, di
-    mov bx, 160
-    xor dx, dx
-    div bx          ; AX = fila, DX = col_bytes/2 (col)
-    cmp dx, 0
-    jne .del_char
-    ; DX==0 => inicio de línea, mover a fila-1, columna final
-    cmp ax, 0
-    je main_loop
-    dec ax
-    mul bx          ; AX = (fila-1) * 160
-    add ax, 158     ; columna final: 79*2 = 158
-    mov di, ax
-    jmp .write_space
-.del_char:
-    sub di, 2
-.write_space:
+borrar_tecla:
+    mov ah, 0x0e
+    mov al, 0x08
+    int 0x10
     mov al, ' '
-    mov ah, 0x07
-    mov [es:di], ax
-    jmp main_loop
+    int 0x10
+    mov al, 0x08
+    int 0x10
+    jmp mi_bucle
 
-do_enter:
-    mov ax, di
-    mov bx, 160
-    xor dx, dx
-    div bx           ; AX = fila, remainder DX = col/2
-    inc ax
-    mul bx           ; AX = (fila+1) * 160
-    mov di, ax
-    cmp di, 4000
-    jl main_loop
-    ; necesitamos scrollar
-    call scroll_up
-    jmp main_loop
+; Array con el abecedario completo y números
+abecedario db "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 "
 
-; desplaza toda la pantalla 1 línea hacia arriba y limpia la última
-scroll_up:
-    push ax
-    push bx
-    push cx
-    push dx
-    push si
-    push di
-    push ds
-
-    ; mover 3840 bytes (1920 words) desde offset 160 -> offset 0
-    mov ax, 0xB800
-    mov ds, ax
-    mov si, 160
-    xor di, di
-    mov cx, 1920
-    cld
-    rep movsw
-
-    ; limpiar última línea (80 words) con ' ' + attr 0x07
-    mov ax, 0x0720    ; AH=0x07 (atributo), AL=' ' (0x20)
-    mov cx, 80
-    mov di, 3840
-    rep stosw
-
-    ; dejar el cursor en el inicio de la última línea (offset 3840)
-    mov di, 3840
-
-    pop ds
-    pop di
-    pop si
-    pop dx
-    pop cx
-    pop bx
-    pop ax
-    ret
-
-update_hw_cursor:
-    push ax
-    push bx
-    push dx
-
-    mov ax, di
-    shr ax, 1           ; Convertir offset de bytes a posición de celda (0 - 1999)
-    mov bx, ax          ; Guardar posición en BX
-
-    ; Enviar parte baja del cursor
-    mov dx, 0x03D4
-    mov al, 0x0F
-    out dx, al
-    inc dx
-    mov al, bl
-    out dx, al
-
-    ; Enviar parte alta del cursor
-    dec dx
-    mov al, 0x0E
-    out dx, al
-    inc dx
-    mov al, bh
-    out dx, al
-
-    pop dx
-    pop bx
-    pop ax
-    ret
-
-halt_sys:
-    cli
-    hlt
-
-times 510-($-$$) db 0
-dw 0xAA55
+    ; Rellenar el sector exactamente hasta los 510 bytes y poner la firma de arranque
+    times 510-($-$$) db 0
+    dw 0xaa55
