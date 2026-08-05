@@ -1,3 +1,1 @@
-# MyOS
-
 # CMVCP-OS
